@@ -1,40 +1,45 @@
-// Function to extract rating and review count
-function getRatingAndReview() {
-	// First, find the main business name element we already have
+// Function to extract all business details
+function getBusinessDetails() {
+	// Find the main business name element
 	const nameElement = document.querySelector('div[aria-label^="Actions for"]');
 
-	if (!nameElement) {
-		return { rating: '0.0', reviewCount: '0' };
-	}
+	// Initialize default response object
+	const defaultResponse = {
+		name: 'N/A',
+		rating: '0.0',
+		reviewCount: '0',
+		category: 'N/A',
+		city: 'N/A',
+		phone: 'N/A',
+		website: 'N/A',
+	};
 
-	// Find the nearest container that would contain both rating and business info
-	// Usually, the rating is within the first few levels of DOM hierarchy from the business name
+	if (!nameElement) return defaultResponse;
+
+	// Extract name
+	const name = nameElement
+		.getAttribute('aria-label')
+		.replace('Actions for ', '');
+
+	// Find the nearest container for rating and reviews
 	const mainContainer =
 		nameElement.closest('[role="main"]') ||
 		nameElement.closest('[role="region"]');
 
-	if (!mainContainer) {
-		return { rating: '0.0', reviewCount: '0' };
-	}
+	if (!mainContainer) return { ...defaultResponse, name };
 
-	// Look for rating span specifically within this container
-	// We can be more specific by looking for the pattern that Google Maps uses
-	// Ratings are typically displayed as "4.5 out of 5" or similar
+	// Get rating and review count
 	const ratingSpans = Array.from(
 		mainContainer.querySelectorAll('span[role="img"]')
 	).filter((span) => {
 		const ariaLabel = span.getAttribute('aria-label') || '';
-		// Match patterns like "4.5 stars" or "4.5 out of 5 stars"
 		return /^\d{1,2}(\.\d)?\s+(out of \d\s+)?stars?$/i.test(ariaLabel.trim());
 	});
 
-	// Get the first matching rating span (should be the main one)
 	const ratingSpan = ratingSpans[0];
-
-	// Find review count span near the rating span
 	let reviewSpan = null;
+
 	if (ratingSpan) {
-		// Look for review count in nearby elements
 		const nearbyElement = ratingSpan.parentElement || ratingSpan.parentNode;
 		if (nearbyElement) {
 			reviewSpan =
@@ -45,38 +50,21 @@ function getRatingAndReview() {
 		}
 	}
 
-	const rating = ratingSpan
-		? ratingSpan
-				.getAttribute('aria-label')
-				.trim()
-				.match(/^\d{1,2}(\.\d)?/)[0]
-		: '0.0';
-
-	const reviewCount = reviewSpan
-		? reviewSpan.getAttribute('aria-label').match(/\d+/)[0]
-		: '0';
-
-	return { rating, reviewCount };
-}
-
-// Function to extract name, category, address, phone, and website
-function getAdditionalDetails() {
-	// Extracting business name from the "Actions for" element
-	const nameElement = document.querySelector('div[aria-label^="Actions for"]');
-	const name = nameElement
-		? nameElement.getAttribute('aria-label').replace('Actions for ', '')
-		: 'N/A';
-
-	// Extracting category from the "category" button
-	const categoryElement = document.querySelector(
+	// Extract category, address, phone, and website from the main container
+	const categoryElement = mainContainer.querySelector(
 		'button[jsaction*=".category"]'
 	);
-	const category = categoryElement ? categoryElement.innerText : 'N/A';
-
-	// Extracting city from the address button
-	const addressElement = document.querySelector(
+	const addressElement = mainContainer.querySelector(
 		'button[aria-label^="Address:"]'
 	);
+	const phoneElement = mainContainer.querySelector(
+		'button[aria-label^="Phone:"]'
+	);
+	const websiteElement = mainContainer.querySelector(
+		'a[aria-label^="Website:"]'
+	);
+
+	// Process address for city
 	let city = 'N/A';
 	if (addressElement) {
 		const addressText = addressElement
@@ -87,17 +75,25 @@ function getAdditionalDetails() {
 			addressParts.length > 1 ? addressParts[addressParts.length - 2] : 'N/A';
 	}
 
-	// Extracting phone number
-	const phoneElement = document.querySelector('button[aria-label^="Phone:"]');
-	const phone = phoneElement
-		? phoneElement.getAttribute('aria-label').replace('Phone: ', '')
-		: 'N/A';
-
-	// Extracting website URL
-	const websiteElement = document.querySelector('a[aria-label^="Website:"]');
-	const website = websiteElement ? websiteElement.getAttribute('href') : 'N/A';
-
-	return { name, category, city, phone, website };
+	// Return all details
+	return {
+		name,
+		rating: ratingSpan
+			? ratingSpan
+					.getAttribute('aria-label')
+					.trim()
+					.match(/^\d{1,2}(\.\d)?/)[0]
+			: '0.0',
+		reviewCount: reviewSpan
+			? reviewSpan.getAttribute('aria-label').match(/\d+/)[0]
+			: '0',
+		category: categoryElement ? categoryElement.innerText : 'N/A',
+		city,
+		phone: phoneElement
+			? phoneElement.getAttribute('aria-label').replace('Phone: ', '')
+			: 'N/A',
+		website: websiteElement ? websiteElement.getAttribute('href') : 'N/A',
+	};
 }
 
 // Function to copy data to clipboard
@@ -114,7 +110,6 @@ function copyToClipboard(text) {
 
 // Function to create a snackbar message
 function showSnackbar(message) {
-	// Create snackbar element
 	const snackbar = document.createElement('div');
 	snackbar.textContent = message;
 	snackbar.style.position = 'fixed';
@@ -130,16 +125,13 @@ function showSnackbar(message) {
 	snackbar.style.opacity = '0';
 	snackbar.style.transition = 'opacity 0.5s ease, bottom 0.5s ease';
 
-	// Add snackbar to the document
 	document.body.appendChild(snackbar);
 
-	// Show snackbar
 	setTimeout(() => {
 		snackbar.style.opacity = '1';
 		snackbar.style.bottom = '30px';
 	}, 10);
 
-	// Hide snackbar after 3 seconds
 	setTimeout(() => {
 		snackbar.style.opacity = '0';
 		snackbar.style.bottom = '20px';
@@ -157,7 +149,7 @@ function addCopyButton() {
 	button.style.bottom = '20px';
 	button.style.right = '20px';
 	button.style.padding = '10px 15px';
-	button.style.backgroundColor = '#4285F4'; // Google blue color
+	button.style.backgroundColor = '#4285F4';
 	button.style.color = 'white';
 	button.style.border = 'none';
 	button.style.borderRadius = '5px';
@@ -165,9 +157,8 @@ function addCopyButton() {
 	button.style.zIndex = 1000;
 
 	button.addEventListener('click', () => {
-		const { rating, reviewCount } = getRatingAndReview();
-		const { name, category, city, phone, website } = getAdditionalDetails();
-		const formattedText = `${name}\t${rating}\t${reviewCount}\t${category}\t${city}\t${phone}\t${website}`;
+		const details = getBusinessDetails();
+		const formattedText = `${details.name}\t${details.rating}\t${details.reviewCount}\t${details.category}\t${details.city}\t${details.phone}\t${details.website}`;
 		copyToClipboard(formattedText);
 	});
 
