@@ -1,11 +1,57 @@
 // Function to extract rating and review count
 function getRatingAndReview() {
-	const ratingSpan = document.querySelector('span[role="img"]');
-	const reviewSpan = document.querySelector('span[aria-label*="reviews"]');
+	// First, find the main business name element we already have
+	const nameElement = document.querySelector('div[aria-label^="Actions for"]');
+
+	if (!nameElement) {
+		return { rating: '0.0', reviewCount: '0' };
+	}
+
+	// Find the nearest container that would contain both rating and business info
+	// Usually, the rating is within the first few levels of DOM hierarchy from the business name
+	const mainContainer =
+		nameElement.closest('[role="main"]') ||
+		nameElement.closest('[role="region"]');
+
+	if (!mainContainer) {
+		return { rating: '0.0', reviewCount: '0' };
+	}
+
+	// Look for rating span specifically within this container
+	// We can be more specific by looking for the pattern that Google Maps uses
+	// Ratings are typically displayed as "4.5 out of 5" or similar
+	const ratingSpans = Array.from(
+		mainContainer.querySelectorAll('span[role="img"]')
+	).filter((span) => {
+		const ariaLabel = span.getAttribute('aria-label') || '';
+		// Match patterns like "4.5 stars" or "4.5 out of 5 stars"
+		return /^\d{1,2}(\.\d)?\s+(out of \d\s+)?stars?$/i.test(ariaLabel.trim());
+	});
+
+	// Get the first matching rating span (should be the main one)
+	const ratingSpan = ratingSpans[0];
+
+	// Find review count span near the rating span
+	let reviewSpan = null;
+	if (ratingSpan) {
+		// Look for review count in nearby elements
+		const nearbyElement = ratingSpan.parentElement || ratingSpan.parentNode;
+		if (nearbyElement) {
+			reviewSpan =
+				nearbyElement.querySelector('span[aria-label*="reviews"]') ||
+				nearbyElement.nextElementSibling?.querySelector(
+					'span[aria-label*="reviews"]'
+				);
+		}
+	}
 
 	const rating = ratingSpan
-		? ratingSpan.getAttribute('aria-label').trim().substring(0, 3)
+		? ratingSpan
+				.getAttribute('aria-label')
+				.trim()
+				.match(/^\d{1,2}(\.\d)?/)[0]
 		: '0.0';
+
 	const reviewCount = reviewSpan
 		? reviewSpan.getAttribute('aria-label').match(/\d+/)[0]
 		: '0';
