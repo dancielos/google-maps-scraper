@@ -1,0 +1,17 @@
+{
+	"manifest_version": 3,
+	"name": "Google Maps Scraper",
+	"version": "1.0",
+	"description": "Scrapes the rating and review count from Google Maps business profiles.",
+	"permissions": ["activeTab", "clipboardWrite"],
+	"content_scripts": [
+		{
+			"matches": ["*://*.google.com/maps/*"],
+			"js": ["content.js"],
+			"run_at": "document_end"
+		}
+	],
+	"action": {
+		"default_title": "Google Maps Scraper"
+	}
+}
