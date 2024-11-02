@@ -1,19 +1,59 @@
 // Function to extract rating and review count
 function getRatingAndReview() {
-	// Try to locate the rating span
-	const ratingSpan = document.querySelector('span[aria-hidden="true"]');
+	const ratingSpan = document.querySelector('span[role="img"]');
 	const reviewSpan = document.querySelector('span[aria-label*="reviews"]');
 
-	// Check if the elements exist before accessing their text
-	const rating = ratingSpan ? ratingSpan.innerText : 'N/A';
+	const rating = ratingSpan
+		? ratingSpan.getAttribute('aria-label').trim().substring(0, 3)
+		: '0.0';
 	const reviewCount = reviewSpan
 		? reviewSpan.getAttribute('aria-label').match(/\d+/)[0]
-		: 'N/A';
+		: '0';
 
 	return { rating, reviewCount };
 }
 
-// Function to copy the data to the clipboard
+// Function to extract name, category, address, phone, and website
+function getAdditionalDetails() {
+	// Extracting business name from the "Actions for" element
+	const nameElement = document.querySelector('div[aria-label^="Actions for"]');
+	const name = nameElement
+		? nameElement.getAttribute('aria-label').replace('Actions for ', '')
+		: 'N/A';
+
+	// Extracting category from the "category" button
+	const categoryElement = document.querySelector(
+		'button[jsaction="pane.wfvdle14.category"]'
+	);
+	const category = categoryElement ? categoryElement.innerText : 'N/A';
+
+	// Extracting city from the address button
+	const addressElement = document.querySelector(
+		'button[aria-label^="Address:"]'
+	);
+	let city = 'N/A';
+	if (addressElement) {
+		const addressText = addressElement
+			.getAttribute('aria-label')
+			.replace('Address: ', '');
+		const addressParts = addressText.split(', ');
+		city = addressParts.length > 1 ? addressParts[1] : 'N/A';
+	}
+
+	// Extracting phone number
+	const phoneElement = document.querySelector('button[aria-label^="Phone:"]');
+	const phone = phoneElement
+		? phoneElement.getAttribute('aria-label').replace('Phone: ', '')
+		: 'N/A';
+
+	// Extracting website URL
+	const websiteElement = document.querySelector('a[aria-label^="Website:"]');
+	const website = websiteElement ? websiteElement.getAttribute('href') : 'N/A';
+
+	return { name, category, city, phone, website };
+}
+
+// Function to copy data to clipboard
 function copyToClipboard(text) {
 	navigator.clipboard
 		.writeText(text)
@@ -28,7 +68,7 @@ function copyToClipboard(text) {
 // Function to add "Copy to Clipboard" button
 function addCopyButton() {
 	const button = document.createElement('button');
-	button.textContent = 'Copy Rating & Review';
+	button.textContent = 'Copy Data';
 	button.style.position = 'fixed';
 	button.style.bottom = '20px';
 	button.style.right = '20px';
@@ -42,7 +82,8 @@ function addCopyButton() {
 
 	button.addEventListener('click', () => {
 		const { rating, reviewCount } = getRatingAndReview();
-		const formattedText = `Rating: ${rating}\tReviews: ${reviewCount}`;
+		const { name, category, city, phone, website } = getAdditionalDetails();
+		const formattedText = `${name}\t${rating}\t${reviewCount}\t${category}\t${city}\t${phone}\t${website}`;
 		copyToClipboard(formattedText);
 	});
 
