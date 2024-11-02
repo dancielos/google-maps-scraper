@@ -23,7 +23,7 @@ function getAdditionalDetails() {
 
 	// Extracting category from the "category" button
 	const categoryElement = document.querySelector(
-		'button[jsaction="pane.wfvdle14.category"]'
+		'button[jsaction*=".category"]'
 	);
 	const category = categoryElement ? categoryElement.innerText : 'N/A';
 
@@ -37,7 +37,8 @@ function getAdditionalDetails() {
 			.getAttribute('aria-label')
 			.replace('Address: ', '');
 		const addressParts = addressText.split(', ');
-		city = addressParts.length > 1 ? addressParts[1] : 'N/A';
+		city =
+			addressParts.length > 1 ? addressParts[addressParts.length - 2] : 'N/A';
 	}
 
 	// Extracting phone number
