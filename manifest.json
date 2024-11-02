@@ -6,7 +6,10 @@
 	"permissions": ["activeTab", "clipboardWrite"],
 	"content_scripts": [
 		{
-			"matches": ["*://*.google.com/maps/*"],
+			"matches": [
+				"*://*.google.com/maps/*",
+				"*://*.google.com/localservices/*"
+			],
 			"js": ["content.js"],
 			"run_at": "document_end"
 		}
