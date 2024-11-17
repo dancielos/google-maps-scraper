@@ -12,6 +12,7 @@
 				"helpers/snackbar.js",
 				"helpers/copyToClipboard.js",
 				"helpers/businessDetails.js",
+				"helpers/waitForElement.js",
 				"helpers/reviewer.js",
 				"content.js"
 			],
