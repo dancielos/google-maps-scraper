@@ -96,19 +96,6 @@ function getBusinessDetails() {
 		website: websiteElement ? websiteElement.getAttribute('href') : 'N/A',
 	};
 }
-
-// Function to copy data to clipboard
-function copyToClipboard(text) {
-	navigator.clipboard
-		.writeText(text)
-		.then(() => {
-			snackbarHelper.showSnackbar('Copied to clipboard!');
-		})
-		.catch((err) => {
-			console.error('Failed to copy: ', err);
-		});
-}
-
 // Function to add "Copy to Clipboard" button
 function addCopyButton() {
 	const button = document.createElement('button');
@@ -127,7 +114,7 @@ function addCopyButton() {
 	button.addEventListener('click', () => {
 		const details = getBusinessDetails();
 		const formattedText = `${details.name}\t${details.rating}\t${details.reviewCount}\t${details.category}\t${details.city}\t${details.phone}\t${details.website}`;
-		copyToClipboard(formattedText);
+		copyToClipboardHelper.copy(formattedText);
 	});
 
 	document.body.appendChild(button);

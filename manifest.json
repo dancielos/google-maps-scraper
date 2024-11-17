@@ -7,7 +7,12 @@
 	"content_scripts": [
 		{
 			"matches": ["*://*.google.com/maps/*", "*://*.google.com/search*"],
-			"js": ["helpers/matchesPattern.js", "helpers/snackbar.js", "content.js"],
+			"js": [
+				"helpers/matchesPattern.js",
+				"helpers/snackbar.js",
+				"helpers/copyToClipboard.js",
+				"content.js"
+			],
 			"run_at": "document_end"
 		}
 	],
