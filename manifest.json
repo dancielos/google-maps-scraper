@@ -1,14 +1,24 @@
 {
 	"manifest_version": 3,
-	"name": "Google Maps Scraper",
-	"version": "1.0",
-	"description": "Scrapes the rating and review count from Google Maps business profiles.",
-	"permissions": ["activeTab", "clipboardWrite"],
+	"name": "Personal Scraper",
+	"version": "1.2",
+	"description": "Scrapes the rating and review count from Google Maps business profiles, finds email addresses on the page.",
+	"permissions": ["activeTab", "clipboardWrite", "scripting"],
 	"content_scripts": [
 		{
-			"matches": ["*://*.google.com/maps/*", "*://*.google.com/search*"],
+			"matches": ["<all_urls>"],
+			"exclude_matches": [
+				"*://*.youtube.com/*",
+				"*://*.facebook.com/*",
+				"*://*.twitter.com/*",
+				"*://*.instagram.com/*",
+				"*://*.linkedin.com/*",
+				"*://*.tiktok.com/*",
+				"*://*.pinterest.com/*"
+			],
 			"js": [
 				"helpers/matchesPattern.js",
+				"helpers/emailFinder.js",
 				"helpers/snackbar.js",
 				"helpers/copyToClipboard.js",
 				"helpers/businessDetails.js",
@@ -20,6 +30,6 @@
 		}
 	],
 	"action": {
-		"default_title": "Google Maps Scraper"
+		"default_title": "Personal Scraper"
 	}
 }
