@@ -1,15 +1,3 @@
-// Helper function to check if URL matches a pattern
-function matchesPattern(pattern) {
-	// Convert the pattern to a regex
-	// Replace * with .*
-	const regexPattern = pattern
-		.replace(/\./g, '\\.')
-		.replace(/\*/g, '.*')
-		.replace(/\//g, '\\/');
-	const regex = new RegExp(`^${regexPattern}$`);
-	return regex.test(window.location.href);
-}
-
 // ---- Maps Feature Functions ---- //
 // Function to extract all business details
 function getBusinessDetails() {
@@ -114,44 +102,11 @@ function copyToClipboard(text) {
 	navigator.clipboard
 		.writeText(text)
 		.then(() => {
-			showSnackbar('Copied to clipboard!');
+			snackbarHelper.showSnackbar('Copied to clipboard!');
 		})
 		.catch((err) => {
 			console.error('Failed to copy: ', err);
 		});
-}
-
-// Function to create a snackbar message
-function showSnackbar(message) {
-	const snackbar = document.createElement('div');
-	snackbar.textContent = message;
-	snackbar.style.position = 'fixed';
-	snackbar.style.bottom = '20px';
-	snackbar.style.left = '50%';
-	snackbar.style.transform = 'translateX(-50%)';
-	snackbar.style.backgroundColor = '#323232';
-	snackbar.style.color = '#fff';
-	snackbar.style.padding = '12px 24px';
-	snackbar.style.borderRadius = '4px';
-	snackbar.style.boxShadow = '0px 4px 6px rgba(0, 0, 0, 0.1)';
-	snackbar.style.zIndex = 1001;
-	snackbar.style.opacity = '0';
-	snackbar.style.transition = 'opacity 0.5s ease, bottom 0.5s ease';
-
-	document.body.appendChild(snackbar);
-
-	setTimeout(() => {
-		snackbar.style.opacity = '1';
-		snackbar.style.bottom = '30px';
-	}, 10);
-
-	setTimeout(() => {
-		snackbar.style.opacity = '0';
-		snackbar.style.bottom = '20px';
-		setTimeout(() => {
-			snackbar.remove();
-		}, 500);
-	}, 3000);
 }
 
 // Function to add "Copy to Clipboard" button
@@ -176,12 +131,6 @@ function addCopyButton() {
 	});
 
 	document.body.appendChild(button);
-}
-
-// Run the function to add the button when the script loads
-function initializeMapsFeatures() {
-	if (matchesPattern('*://*.google.com/maps/*')) {
-	}
 }
 
 // ---- Search Feature Functions ---- //
@@ -260,13 +209,13 @@ async function getLatestReviewer() {
 
 // ---- Initialization Functions ---- //
 function initializeMapsFeatures() {
-	if (matchesPattern('*://*.google.com/maps/*')) {
+	if (UrlHelper.matchesPattern('*://*.google.com/maps/*')) {
 		addCopyButton();
 	}
 }
 
 function initializeSearchReviews() {
-	if (matchesPattern('*://*.google.com/search*')) {
+	if (UrlHelper.matchesPattern('*://*.google.com/search*')) {
 		createReviewerButton();
 	}
 }
