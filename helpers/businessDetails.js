@@ -97,4 +97,26 @@ const businessHelper = {
 			website: websiteElement ? websiteElement.getAttribute('href') : 'N/A',
 		};
 	},
+	addCopyButton: function () {
+		const button = document.createElement('button');
+		button.textContent = 'Copy Data';
+		button.style.position = 'fixed';
+		button.style.bottom = '20px';
+		button.style.right = '20px';
+		button.style.padding = '10px 15px';
+		button.style.backgroundColor = '#4285F4';
+		button.style.color = 'white';
+		button.style.border = 'none';
+		button.style.borderRadius = '5px';
+		button.style.cursor = 'pointer';
+		button.style.zIndex = 1000;
+
+		button.addEventListener('click', () => {
+			const details = businessHelper.getBusinessDetails();
+			const formattedText = `${details.name}\t${details.rating}\t${details.reviewCount}\t${details.category}\t${details.city}\t${details.phone}\t${details.website}`;
+			copyToClipboardHelper.copy(formattedText);
+		});
+
+		document.body.appendChild(button);
+	},
 };
