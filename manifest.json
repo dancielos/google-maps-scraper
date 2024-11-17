@@ -11,6 +11,7 @@
 				"helpers/matchesPattern.js",
 				"helpers/snackbar.js",
 				"helpers/copyToClipboard.js",
+				"helpers/businessDetails.js",
 				"content.js"
 			],
 			"run_at": "document_end"
