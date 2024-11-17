@@ -1,3 +1,16 @@
+// Helper function to check if URL matches a pattern
+function matchesPattern(pattern) {
+	// Convert the pattern to a regex
+	// Replace * with .*
+	const regexPattern = pattern
+		.replace(/\./g, '\\.')
+		.replace(/\*/g, '.*')
+		.replace(/\//g, '\\/');
+	const regex = new RegExp(`^${regexPattern}$`);
+	return regex.test(window.location.href);
+}
+
+// ---- Maps Feature Functions ---- //
 // Function to extract all business details
 function getBusinessDetails() {
 	// Find the main business name element
@@ -166,4 +179,106 @@ function addCopyButton() {
 }
 
 // Run the function to add the button when the script loads
-addCopyButton();
+function initializeMapsFeatures() {
+	if (matchesPattern('*://*.google.com/maps/*')) {
+	}
+}
+
+// ---- Search Feature Functions ---- //
+
+function createReviewerButton() {
+	const button = document.createElement('button');
+	button.textContent = 'Copy Latest 5-Star Reviewer';
+	button.style.cssText = `
+			position: fixed;
+			bottom: 20px;
+			right: 20px;
+			z-index: 9999;
+			padding: 10px;
+			background: #4285f4;
+			color: white;
+			border: none;
+			border-radius: 4px;
+			cursor: pointer;
+	`;
+	button.addEventListener('click', getLatestReviewer);
+	document.body.appendChild(button);
+}
+
+async function getLatestReviewer() {
+	try {
+		// Find the reviews trigger element
+		const reviewsTrigger = document.querySelector(
+			'[data-async-trigger="reviewDialog"]'
+		);
+		if (!reviewsTrigger) {
+			throw new Error('Reviews trigger not found');
+		}
+
+		// Update the sort_by attribute
+		reviewsTrigger.setAttribute('data-sort_by', 'newestFirst');
+
+		// Click to open reviews dialog
+		reviewsTrigger.click();
+
+		// Wait for the reviews dialog to open and load
+		await new Promise((resolve) => setTimeout(resolve, 2000));
+
+		// Find the first review
+		const firstReview = document.querySelector(
+			'.gws-localreviews__google-review'
+		);
+		if (!firstReview) {
+			throw new Error('No reviews found');
+		}
+
+		// Try to get the name from the nested anchor tag first
+		let reviewerName = '';
+
+		const reviewerImage = firstReview.querySelector('a > img');
+		if (reviewerImage) {
+			reviewerName = reviewerImage.alt.trim();
+		}
+
+		if (!reviewerName) {
+			throw new Error('Reviewer name not found');
+		}
+
+		// Get just the first name
+		const firstName = reviewerName.split(' ')[0];
+
+		// Copy to clipboard
+		await navigator.clipboard.writeText(firstName);
+
+		// Show success message
+		alert(`Copied reviewer's first name: ${firstName}`);
+	} catch (error) {
+		console.error('Error:', error);
+		alert(`Error: ${error.message}`);
+	}
+}
+
+// ---- Initialization Functions ---- //
+function initializeMapsFeatures() {
+	if (matchesPattern('*://*.google.com/maps/*')) {
+		addCopyButton();
+	}
+}
+
+function initializeSearchReviews() {
+	if (matchesPattern('*://*.google.com/search*')) {
+		createReviewerButton();
+	}
+}
+
+// Main initialization function
+function initialize() {
+	// Only initialize the relevant feature based on the current URL
+	if (window.location.href.includes('google.com/maps')) {
+		initializeMapsFeatures();
+	} else if (window.location.href.includes('google.com/search')) {
+		initializeSearchReviews();
+	}
+}
+
+initialize();
