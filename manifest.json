@@ -11,6 +11,7 @@
 				"*://*.youtube.com/*",
 				"*://*.facebook.com/*",
 				"*://*.twitter.com/*",
+				"*://*.x.com/*",
 				"*://*.instagram.com/*",
 				"*://*.linkedin.com/*",
 				"*://*.tiktok.com/*",
@@ -37,6 +38,8 @@
 				"*://*.clickup.com/*",
 				"*://*.miro.com/*",
 				"*://*.figma.com/*",
+				"*://*.claude.ai/*",
+				"*://*.chatgpt.com/*",
 
 				"*://*.outlook.com/*",
 				"*://*.outlook.office.com/*",
