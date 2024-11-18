@@ -37,31 +37,49 @@ const reviewerHelper = {
 			// Wait for the reviews dialog to open and load
 			await waitHelper.waitForElement('.review-dialog-body');
 
-			// Find the first review
-			const firstReview = document.querySelector(
+			// Find all reviews
+			const reviews = document.querySelectorAll(
 				'.gws-localreviews__google-review'
 			);
-			if (!firstReview) {
+			if (!reviews || reviews.length === 0) {
 				throw new Error('No reviews found');
 			}
 
-			// Try to get the name from the nested anchor tag first
-			let reviewerName = '';
+			// Loop through reviews to find the latest 5-star review
+			for (const review of reviews) {
+				// Find the rating element by aria-label containing "Rated"
+				const ratingElement = review.querySelector('[aria-label^="Rated"]');
+				if (!ratingElement) continue;
 
-			const reviewerImage = firstReview.querySelector('a > img');
-			if (reviewerImage) {
-				reviewerName = reviewerImage.alt.trim();
+				const ratingText = ratingElement.getAttribute('aria-label');
+				if (!ratingText) continue;
+
+				// Extract the rating number (e.g., "5.0" from "Rated 5.0 out of 5,")
+				const ratingMatch = ratingText.match(/Rated (\d+\.?\d*) out of/);
+				if (!ratingMatch) continue;
+
+				const rating = parseFloat(ratingMatch[1]);
+
+				// Check if it's a 5-star review
+				if (rating === 5.0) {
+					// Try to get the name from the nested anchor tag first
+					const reviewerImage = review.querySelector('a > img');
+					if (!reviewerImage) continue;
+
+					const reviewerName = reviewerImage.alt.trim();
+					if (!reviewerName) continue;
+
+					// Get just the first name
+					const firstName = reviewerName.split(' ')[0];
+
+					// Copy to clipboard and return
+					copyToClipboardHelper.copy(firstName);
+					return;
+				}
 			}
 
-			if (!reviewerName) {
-				throw new Error('Reviewer name not found');
-			}
-
-			// Get just the first name
-			const firstName = reviewerName.split(' ')[0];
-
-			// Copy to clipboard
-			copyToClipboardHelper.copy(firstName);
+			// If we get here, no 5-star review was found
+			throw new Error('No recent 5-star reviews found');
 		} catch (error) {
 			console.error('Error:', error);
 			alert(`Error: ${error.message}`);
