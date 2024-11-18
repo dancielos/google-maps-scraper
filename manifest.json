@@ -10,12 +10,67 @@
 			"exclude_matches": [
 				"*://*.youtube.com/*",
 				"*://*.facebook.com/*",
-				"*://*.notion.so/*",
 				"*://*.twitter.com/*",
 				"*://*.instagram.com/*",
 				"*://*.linkedin.com/*",
 				"*://*.tiktok.com/*",
-				"*://*.pinterest.com/*"
+				"*://*.pinterest.com/*",
+
+				"*://docs.google.com/*",
+				"*://drive.google.com/*",
+				"*://sheets.google.com/*",
+				"*://slides.google.com/*",
+				"*://calendar.google.com/*",
+				"*://meet.google.com/*",
+				"*://chat.google.com/*",
+				"*://mail.google.com/*",
+				"*://classroom.google.com/*",
+				"*://photos.google.com/*",
+
+				"*://*.notion.so/*",
+				"*://*.slack.com/*",
+				"*://*.trello.com/*",
+				"*://*.asana.com/*",
+				"*://*.airtable.com/*",
+				"*://*.monday.com/*",
+				"*://*.clickup.com/*",
+				"*://*.miro.com/*",
+				"*://*.figma.com/*",
+
+				"*://*.outlook.com/*",
+				"*://*.outlook.office.com/*",
+				"*://*.outlook.office365.com/*",
+				"*://*.yahoo.com/*",
+				"*://*.proton.me/*",
+				"*://*.zoho.com/*",
+
+				"*://*.dropbox.com/*",
+				"*://*.box.com/*",
+				"*://*.onedrive.live.com/*",
+
+				"*://*.zoom.us/*",
+				"*://*.teams.microsoft.com/*",
+				"*://*.webex.com/*",
+
+				"*://github.com/*",
+				"*://gitlab.com/*",
+				"*://bitbucket.org/*",
+				"*://*.atlassian.com/*",
+
+				"*://*.udemy.com/*",
+				"*://*.coursera.org/*",
+				"*://*.edx.org/*",
+				"*://*.canvas.com/*",
+				"*://*.blackboard.com/*",
+
+				"*://*.paypal.com/*",
+				"*://*.stripe.com/*",
+				"*://*.wise.com/*",
+
+				"*://*.amazon.com/*",
+				"*://*.ebay.com/*",
+				"*://*.etsy.com/*",
+				"*://*.shopify.com/*"
 			],
 			"js": [
 				"helpers/matchesPattern.js",
