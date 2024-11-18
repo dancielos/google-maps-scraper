@@ -1,3 +1,5 @@
+// TODO: if the url is /localservices/ or /maps/, then have an option to get the most recent reviewer
+
 const reviewerHelper = {
 	createReviewerButton: function () {
 		const button = document.createElement('button');

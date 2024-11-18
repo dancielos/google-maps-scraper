@@ -1,7 +1,5 @@
-// [] TODO: Add a feature where you check if they're full-time business or not
-// [] TODO: it should work on Facebook to easily copy email address
-// [] TODO: Highlight names if that can be done efficiently
-// [] TODO: Auto input for contact forms (name, email, phone number)
+// TODO: remove duplicates
+// TODO: remove weird characters, so it should just be the email
 
 const emailFinderHelper = {
 	// Regular expression for finding emails
