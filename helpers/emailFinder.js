@@ -16,8 +16,9 @@ const emailFinderHelper = {
 			email.replace('mailto:', '')
 		);
 		const allEmails = [...new Set([...textEmails, ...mailtoEmails])];
+		const cleanedEmails = allEmails.map((a) => a.toLowerCase());
 
-		return allEmails;
+		return cleanedEmails;
 	},
 
 	// Create and inject the email display UI
