@@ -70,7 +70,7 @@ const reviewerHelper = {
 					if (!reviewerName) continue;
 
 					// Get just the first name
-					const firstName = reviewerName.split(' ')[0];
+					const firstName = textHelper.toTitleCase(reviewerName.split(' ')[0]);
 
 					// Copy to clipboard and return
 					copyToClipboardHelper.copy(firstName);

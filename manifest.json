@@ -75,6 +75,7 @@
 			],
 			"js": [
 				"helpers/matchesPattern.js",
+				"helpers/text.js",
 				"helpers/emailFinder.js",
 				"helpers/snackbar.js",
 				"helpers/copyToClipboard.js",
