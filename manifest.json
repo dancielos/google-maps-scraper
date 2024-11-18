@@ -26,6 +26,7 @@
 				"*://mail.google.com/*",
 				"*://classroom.google.com/*",
 				"*://photos.google.com/*",
+				"*://script.google.com/*",
 
 				"*://*.notion.so/*",
 				"*://*.slack.com/*",
