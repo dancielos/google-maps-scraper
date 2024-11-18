@@ -9,6 +9,7 @@ const emailFinderHelper = {
 
 		// Find emails in both text and HTML (for mailto: links)
 		const textEmails = bodyText.match(this.emailRegex) || [];
+
 		const htmlEmails = htmlContent.match(/mailto:([^"'>\s]+)/g) || [];
 
 		// Clean up mailto: emails and combine results

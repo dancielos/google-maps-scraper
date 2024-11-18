@@ -9,7 +9,6 @@
 			"matches": ["<all_urls>"],
 			"exclude_matches": [
 				"*://*.youtube.com/*",
-				"*://*.facebook.com/*",
 				"*://*.twitter.com/*",
 				"*://*.instagram.com/*",
 				"*://*.linkedin.com/*",
