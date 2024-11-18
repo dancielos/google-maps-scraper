@@ -10,6 +10,7 @@
 			"exclude_matches": [
 				"*://*.youtube.com/*",
 				"*://*.facebook.com/*",
+				"*://*.notion.so/*",
 				"*://*.twitter.com/*",
 				"*://*.instagram.com/*",
 				"*://*.linkedin.com/*",
