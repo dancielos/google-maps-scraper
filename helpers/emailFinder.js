@@ -1,3 +1,8 @@
+// [] TODO: Add a feature where you check if they're full-time business or not
+// [] TODO: it should work on Facebook to easily copy email address
+// [] TODO: Highlight names if that can be done efficiently
+// [] TODO: Auto input for contact forms (name, email, phone number)
+
 const emailFinderHelper = {
 	// Regular expression for finding emails
 	emailRegex: /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g,
@@ -113,5 +118,25 @@ const emailFinderHelper = {
 		container.appendChild(closeButton);
 
 		document.body.appendChild(container);
+	},
+	fallbackCopy: function (text) {
+		const textarea = document.createElement('textarea');
+		textarea.value = text;
+		textarea.style.position = 'fixed'; // Avoid scrolling to bottom
+		textarea.style.opacity = '0'; // Make it invisible
+		document.body.appendChild(textarea);
+		textarea.select();
+		try {
+			const successful = document.execCommand('copy');
+			if (successful) {
+				snackbarHelper.showSnackbar('Copied using fallback!');
+			} else {
+				snackbarHelper.showSnackbar('Fallback copy failed.');
+			}
+		} catch (err) {
+			console.error('Fallback copy failed: ', err);
+		} finally {
+			document.body.removeChild(textarea);
+		}
 	},
 };
