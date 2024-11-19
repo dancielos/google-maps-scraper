@@ -41,6 +41,11 @@
 				"*://*.claude.ai/*",
 				"*://*.chatgpt.com/*",
 				"*://*.instantly.ai/*",
+				"*://*.cloudways.com/*",
+				"*://*.noviamiard.com/*",
+				"*://*.beyondvinyasa.com/*",
+				"*://*.luxdigital.ca/*",
+				"*://*.fryit.co/*",
 
 				"*://*.outlook.com/*",
 				"*://*.outlook.office.com/*",
