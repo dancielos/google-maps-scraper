@@ -1,6 +1,9 @@
 {
 	"manifest_version": 3,
 	"name": "Personal Scraper",
+	"icons": {
+		"128": "icon128.png"
+	},
 	"version": "1.2",
 	"description": "Scrapes the rating and review count from Google Maps business profiles, finds email addresses on the page.",
 	"permissions": ["activeTab", "clipboardWrite", "scripting"],

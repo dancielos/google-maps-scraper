@@ -1,10 +1,20 @@
 const copyToClipboardHelper = {
 	copy: function (text) {
-		if (navigator.clipboard && navigator.clipboard.writeText) {
+		if (
+			navigator.clipboard &&
+			typeof navigator.clipboard.writeText === 'function'
+		) {
 			navigator.clipboard
 				.writeText(text)
 				.then(() => {
-					snackbarHelper.showSnackbar('Copied to clipboard!');
+					if (
+						typeof snackbarHelper !== 'undefined' &&
+						snackbarHelper.showSnackbar
+					) {
+						snackbarHelper.showSnackbar('Copied to clipboard!');
+					} else {
+						console.log('Copied to clipboard!');
+					}
 				})
 				.catch((err) => {
 					console.error('Failed to copy using Clipboard API: ', err);
@@ -14,19 +24,36 @@ const copyToClipboardHelper = {
 			this.fallbackCopy(text);
 		}
 	},
+
 	fallbackCopy: function (text) {
 		const textarea = document.createElement('textarea');
 		textarea.value = text;
-		textarea.style.position = 'fixed'; // Avoid scrolling to bottom
-		textarea.style.opacity = '0'; // Make it invisible
+
+		// Style to prevent conflicts and keep invisible
+		Object.assign(textarea.style, {
+			position: 'fixed',
+			top: '-9999px',
+			left: '-9999px',
+			opacity: '0',
+			pointerEvents: 'none',
+		});
+
 		document.body.appendChild(textarea);
 		textarea.select();
+
 		try {
 			const successful = document.execCommand('copy');
 			if (successful) {
-				snackbarHelper.showSnackbar('Copied using fallback!');
+				if (
+					typeof snackbarHelper !== 'undefined' &&
+					snackbarHelper.showSnackbar
+				) {
+					snackbarHelper.showSnackbar('Copied using fallback!');
+				} else {
+					console.log('Copied using fallback!');
+				}
 			} else {
-				snackbarHelper.showSnackbar('Fallback copy failed.');
+				console.warn('Fallback copy failed.');
 			}
 		} catch (err) {
 			console.error('Fallback copy failed: ', err);
