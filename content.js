@@ -3,6 +3,7 @@
 // TODO: Highlight names if that can be done efficiently
 // TODO: Auto input for contact forms (name, email, phone number)
 // TODO: When there's no trigger, then handle that error
+// TODO: just one design, it currently uses the font face and size of the website, which is too inconsistent
 
 // ---- Initialization Functions ---- //
 function initializeMapsFeatures() {
