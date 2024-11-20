@@ -1,5 +1,6 @@
 // TODO: remove duplicates
 // TODO: remove weird characters, so it should just be the email
+// TODO: just one design, it currently uses the font face and size of the website, which is too inconsistent
 
 const emailFinderHelper = {
 	// Regular expression for finding emails
