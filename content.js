@@ -48,4 +48,27 @@ function initialize() {
 	}
 }
 
-initialize();
+// Wrap your main functionality to respect the "enabled" state
+function main() {
+	chrome.storage.local.get(['extensionEnabled'], (result) => {
+		if (result.extensionEnabled ?? true) {
+			initialize(); // Call your existing initialization logic
+		}
+	});
+}
+
+// Listen for runtime messages to enable/disable features dynamically
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+	if (message.action === 'toggle-extension') {
+		if (message.enabled) {
+			console.log('Extension enabled');
+			initialize(); // Reinitialize if enabled
+		} else {
+			console.log('Extension disabled');
+			// Optionally clean up any UI changes or listeners
+		}
+	}
+});
+
+// Run the script
+main();
