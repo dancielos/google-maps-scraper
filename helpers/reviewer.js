@@ -47,10 +47,12 @@ const reviewerHelper = {
 				console.warn(
 					'No reviews found using initial class. Attempting fallback...'
 				);
+
+				// Fallback: Find reviewer links and get their grandparent divs
 				reviews = Array.from(
 					document.querySelectorAll('a[href*="/maps/contrib/"]')
 				)
-					.map((link) => link.closest('.review-class-name-here')) // Replace with a class or selector near the review container
+					.map((link) => link.closest('div').parentElement) // Grandparent div
 					.filter(Boolean); // Remove nulls or undefined
 			}
 
@@ -77,11 +79,14 @@ const reviewerHelper = {
 				// Check if it's a 5-star review
 				if (rating === 5.0) {
 					// Try to get the name from the nested anchor tag first
-					const reviewerImage = review.querySelector('a > img');
-					if (!reviewerImage) continue;
+					let reviewerImage = review.querySelector('a > img');
 
-					const reviewerName = reviewerImage.alt.trim();
-					if (!reviewerName) continue;
+					let reviewerName = reviewerImage?.alt.trim() ?? null;
+
+					if (!reviewerImage && !reviewerName) {
+						reviewerImage = review.querySelector('div[role="img"]');
+						reviewerName = reviewerImage.getAttribute('aria-label');
+					} else continue;
 
 					// Get just the first name
 					const firstName = textHelper.toTitleCase(reviewerName.split(' ')[0]);
