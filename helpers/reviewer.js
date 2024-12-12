@@ -40,11 +40,23 @@ const reviewerHelper = {
 			await waitHelper.waitForElement('.review-dialog-body');
 
 			// Find all reviews
-			const reviews = document.querySelectorAll(
+			let reviews = document.querySelectorAll(
 				'.gws-localreviews__google-review'
 			);
 			if (!reviews || reviews.length === 0) {
-				throw new Error('No reviews found');
+				console.warn(
+					'No reviews found using initial class. Attempting fallback...'
+				);
+				reviews = Array.from(
+					document.querySelectorAll('a[href*="/maps/contrib/"]')
+				)
+					.map((link) => link.closest('.review-class-name-here')) // Replace with a class or selector near the review container
+					.filter(Boolean); // Remove nulls or undefined
+			}
+
+			// If no reviews found after fallback, throw error
+			if (!reviews || reviews.length === 0) {
+				throw new Error('No reviews found with either method.');
 			}
 
 			// Loop through reviews to find the latest 5-star review
