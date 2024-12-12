@@ -1,5 +1,9 @@
 // TODO: if the url is /localservices/ or /maps/, then have an option to get the most recent reviewer
 
+function wait(ms) {
+	return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 const reviewerHelper = {
 	createReviewerButton: function () {
 		const button = document.createElement('button');
@@ -31,13 +35,22 @@ const reviewerHelper = {
 			}
 
 			// Update the sort_by attribute
-			reviewsTrigger.setAttribute('data-sort_by', 'newestFirst');
+			// reviewsTrigger.setAttribute('data-sort_by', 'newestFirst'); -> does not work anymore
 
 			// Click to open reviews dialog
 			reviewsTrigger.click();
 
 			// Wait for the reviews dialog to open and load
 			await waitHelper.waitForElement('.review-dialog-body');
+
+			const sortButton = document
+				.querySelector('.review-dialog-body')
+				.querySelector('[data-sort="2"]');
+			if (sortButton) {
+				sortButton.click();
+				// Wait for 500ms before proceeding
+				await wait(500);
+			}
 
 			// Find all reviews
 			let reviews = document.querySelectorAll(
